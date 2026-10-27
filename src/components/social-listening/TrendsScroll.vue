@@ -11,6 +11,7 @@ import { useSocialListening } from '../../composables/useSocialListening.js'
 import SectionChip from './SectionChip.vue'
 import { SOURCE_ICONS, shortNum } from './trendsData.js'
 import IndustryTopicsPage from './IndustryTopicsPage.vue'
+import TrendDetailsTip from './TrendDetailsTip.vue'
 import { topicShares, industryTopics } from './industryTopics.js'
 import { trendChange } from '../../data/socialListening.js'
 // 21 Oct (a19 V2 Figure first, Ayushi's pick over V1 Trend line): the volume leads as a figure.
@@ -147,7 +148,9 @@ function listen(t) {
               <!-- out15 F08: rank 20 (fits "12") + gap 4 = 24, so the figure row below starts on the term's left edge (pl-6). -->
               <div class="flex items-center gap-1">
                 <HLText html-tag="span" size="md" class="text-gray-500 tabular-nums shrink-0 w-5">{{ i + 1 }}</HLText>
-                <HLText html-tag="span" size="md" class="text-gray-600 truncate min-w-0 flex-1 sl-tc-name">{{ r.term }}</HLText>
+                <TrendDetailsTip :row="r" class="min-w-0 flex-1">
+                  <HLText html-tag="span" size="md" class="block text-gray-600 truncate sl-tc-name">{{ r.term }}</HLText>
+                </TrendDetailsTip>
               </div>
               <div class="flex items-baseline gap-2 mt-1 pl-6 min-h-6">
                 <HLText html-tag="span" size="2xl" weight="semibold" class="text-gray-900 tabular-nums">{{ shortNum(r.value) }}</HLText>

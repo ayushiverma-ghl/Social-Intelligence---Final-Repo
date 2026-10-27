@@ -8,6 +8,7 @@ import { ArrowUpRightIcon, Headphones01Icon } from '@gohighlevel/ghl-icons/24/ou
 import { TOPIC_SHOWN_LIMIT } from '../../data/socialListening.js'
 import { useSocialListening } from '../../composables/useSocialListening.js'
 import { shortNum } from './trendsData.js'
+import TrendDetailsTip from './TrendDetailsTip.vue'
 
 const props = defineProps({ row: { type: Object, required: true }, rank: { type: Number, default: 0 }, showChange: Boolean, icon: { type: [Object, Function], default: null }, source: { type: String, default: '' } })
 const { state, peek, listenTo, isSavedTerm, toast, removeTopicQuietly } = useSocialListening()
@@ -26,7 +27,7 @@ function listen() {
     <component :is="icon" v-if="icon" class="w-5 h-5 shrink-0" aria-hidden="true" />
     <HLText v-else html-tag="span" size="md" class="text-gray-500 tabular-nums w-4 text-right shrink-0">{{ rank }}</HLText>
     <span class="min-w-0 flex-1">
-      <HLText html-tag="span" size="lg" weight="medium" class="block text-gray-900 truncate">{{ row.term }}</HLText>
+      <TrendDetailsTip :row="row"><HLText html-tag="span" size="lg" weight="medium" class="block text-gray-900 truncate sl-trow-name">{{ row.term }}</HLText></TrendDetailsTip>
       <HLText html-tag="span" size="md" class="sl-trow-meta block text-gray-500 tabular-nums">
         <template v-if="source">{{ source }} · </template>{{ shortNum(row.value) }} {{ row.unit }}<template v-if="showChange"> · <span class="text-positive-strong font-semibold">↑ {{ row.change }}%</span></template>
       </HLText>

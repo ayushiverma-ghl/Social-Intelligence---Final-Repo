@@ -12,6 +12,7 @@ export const PLATFORMS = [
 ]
 const SHORT = { google: 'Google', pinterest: 'Pinterest', wikipedia: 'Wikipedia', 'yt-videos': 'YouTube videos', 'yt-channels': 'YouTube channels', 'yt-keywords': 'YouTube searches' }
 const LONG = { 'yt-videos': 'YouTube trending videos', 'yt-keywords': 'YouTube popular searches' }
+const REGIONS = ['United States', 'India', 'United Kingdom', 'Brazil', 'Germany', 'Canada', 'Australia', 'Mexico']
 const hash = (t) => [...t].reduce((a, c) => (a * 31 + c.charCodeAt(0)) >>> 0, 7)
 
 // 27 Oct (developers): each source returns 50 trends. Past the first 12 these are sample terms.
@@ -38,8 +39,17 @@ export function trendSources(rangeKey) {
       const h = hash(r.term)
       const change = 8 + (h % 160)
       const base = r.value / 7
+      // 28 Oct: the API's extra detail per trend (growth over three windows, top regions on a
+      // 0 to 100 interest scale), shown in the hover on the trend's name. Sample figures.
+      const regions = REGIONS.filter((_, k) => (h >> k) % 3 === 0).slice(0, 2)
+      const details = {
+        weekly: change,
+        monthly: Math.round(change * (1.3 + (h % 9) / 10)),
+        yearly: Math.round(change * (3 + (h % 11))),
+        regions: (regions.length ? regions : REGIONS.slice(h % 6, (h % 6) + 2)).map((name, k) => ({ name, score: k ? 62 + (h % 37) : 100 })),
+      }
       return {
-        ...r, change, unit: s.unit,
+        ...r, change, unit: s.unit, details,
         series: Array.from({ length: 7 }, (_, d) => Math.round(base * (0.55 + d * (0.06 + change / 2000) + ((h >> d) % 5) / 40))),
       }
     }),
