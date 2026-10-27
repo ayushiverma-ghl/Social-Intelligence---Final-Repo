@@ -26,7 +26,8 @@ const room = computed(() => Math.max(0, maxCompetitors.value - tracked.value.len
 // The industry's three, minus the ones you track, never more than there is room for.
 const pool = computed(() => (spaceData.value.competitors || []).slice(0, 3))
 const left = computed(() => pool.value.filter((n) => !tracked.value.includes(n)).slice(0, room.value))
-const initials = (n) => n.split(/\s+/).map((w) => w[0]).join('').slice(0, 2).toUpperCase()
+// Letters only, so "Tint & Tone Studio" reads TT, not T&.
+const initials = (n) => n.split(/\s+/).filter((w) => /^[\p{L}\p{N}]/u.test(w)).map((w) => w[0]).join('').slice(0, 2).toUpperCase()
 
 const shareRows = computed(() => {
   if (!tracked.value.length) return []

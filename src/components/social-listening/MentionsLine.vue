@@ -32,6 +32,8 @@ function niceAxis(peak, counts, whole = true) {
   // out9 q03: a NaN or Infinity peak (last week divided by zero) drew "NaN" and "InfinityK" on the
   // axis; tiny counts drew 0, 0, 1, 1. Guarded, and counts get whole-number ticks.
   peak = Number.isFinite(peak) && peak > 0 ? peak : 0
+  // No mentions yet: a 0 to 4 scale, so the flat line sits on a real axis rather than 0 and 1.
+  if (whole && peak === 0) return { max: 4, ticks: [0, 1, 2, 3, 4] }
   if (whole && peak <= 4) { const max = Math.max(1, Math.ceil(peak)); return { max, ticks: Array.from({ length: max + 1 }, (_, i) => i) } }
   let best = null
   for (const k of counts) {

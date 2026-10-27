@@ -159,7 +159,8 @@ const competitorGap = computed(() => {
 })
 // 15 Oct (review 14): one sentence. "You're 2nd of 2. Bright Path Marketing is ahead on 75%."
 const suggestedCompetitors = computed(() => (spaceData.value.competitors || []).filter((n) => !account.value.competitors.includes(n)).slice(0, 3))
-const initials = (n) => n.split(/\s+/).map((w) => w[0]).join('').slice(0, 2).toUpperCase()
+// Letters only, so "Tint & Tone Studio" reads TT, not T&.
+const initials = (n) => n.split(/\s+/).filter((w) => /^[\p{L}\p{N}]/u.test(w)).map((w) => w[0]).join('').slice(0, 2).toUpperCase()
 const competitorLine = computed(() => {
   const rows = shareRows.value
   if (!rows.length) return ''
@@ -772,9 +773,13 @@ const simpleStory = computed(() => {
   const day = beat.value.metrics ? beat.value.day : 0
   const tr = spaceData.value.trends || []
   const sp = spaceInText(account.value.space)
+  if (day === 0 && brandVolume.value) return {
+    headline: 'Your industry is busy. People are starting to mention you.',
+    line: `${fmtNum(brandVolume.value)} mentions in your first week. Here’s what’s getting attention in your industry.`,
+  }
   if (day === 0) return {
     headline: 'Your industry is busy. You’re just getting started.',
-    line: 'Posts about you will show up here as they come in. Until then, here’s what’s getting attention in your industry.',
+    line: 'We’re listening for mentions of you. Until then, here’s what’s getting attention in your industry.',
   }
   // 19 Oct (Sujit): "taking off" says it; "they brought in most of your mentions" was the
   // redundant line, and the account's name stays out of the copy.
@@ -821,7 +826,9 @@ const summaryStats = computed(() => {
   // tell" is off the copy rules.
   const own = m.mode === 'real' && m.share
   const feel = { label: 'How people feel', icon: FaceSmileIcon, value: sentimentReading(net), tail: own ? `${sp.pos}% positive, ${sp.neg}% negative` : `${sp.pos}% positive across your industry` }
-  const share = own
+  const share = (state.day === 0 && brandVolume.value)
+    ? { label: 'Your share of industry posts', icon: PieChart01Icon, value: 'Under 0.1%', tail: `${fmtNum(brandVolume.value)} of ${fmtNum(nicheWindowVolume.value)} mention you` }
+    : own
     // out15 W6: the label names the base (copy rules s4, never a bare "Your share"), so the reading
     // is the figure alone. W3: before the first mention the Mentions card already says "No mentions
     // yet", so this reading says when the share starts instead.

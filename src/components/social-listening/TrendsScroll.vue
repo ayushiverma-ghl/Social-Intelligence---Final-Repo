@@ -17,12 +17,13 @@ import { trendChange } from '../../data/socialListening.js'
 
 // 26 Oct (Trends tab, layout A): `industry` puts the industry's topics first, as one more section.
 const props = defineProps({ sources: { type: Array, required: true }, industry: Boolean, more: Boolean })
-// 27 Oct (developers): on the Trends tab each source shows 12, and Show more adds 12 at a time, in
+// 27 Oct (developers): on the Trends tab each source shows 12, and Show more opens the rest in
 // place, up to the 50 the API returns. The pop-up keeps its 12.
 const STEP = 12
 const shownBy = ref({})
 const shownOf = (s) => (props.more ? shownBy.value[s.key] || STEP : s.rows.length)
-function seeMore(s) { shownBy.value = { ...shownBy.value, [s.key]: Math.min(s.rows.length, shownOf(s) + STEP) } }
+// 27 Oct (Ayushi): Show more opens the whole list at once (no 24, 36, 48 in between).
+function seeMore(s) { shownBy.value = { ...shownBy.value, [s.key]: s.rows.length } }
 // 27 Oct (Ayushi, option C): on the right of each source heading, "12 of 50 · Show more" as a text
 // link; at 50 it reads "Show less" and folds back to 12.
 function setShown(s, n) { shownBy.value = { ...shownBy.value, [s.key]: Math.min(s.rows.length, n) } }

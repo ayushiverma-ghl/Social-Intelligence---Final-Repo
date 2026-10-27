@@ -239,8 +239,11 @@ export function useSocialListening() {
   // Both numbers used to exist: `volume` on the beat and `share` of the niche, and they
   // disagreed by up to five times because nothing tied them together. Share carries the
   // journey's arc and the copy leans on it, so volume follows share rather than the reverse.
-  const brandVolume = computed(() =>
-    Math.round(nicheWindowVolume.value * ((metrics.value.share || 0) / 100)))
+  // 27 Oct (Ayushi): a new account is listened to from day one, so it has a small count of its own.
+  const NEW_MENTIONS = 18
+  const newFew = computed(() => state.design === 'simplified' && state.day === 0 && !!acct().space)
+  const brandVolume = computed(() => (newFew.value ? NEW_MENTIONS :
+    Math.round(nicheWindowVolume.value * ((metrics.value.share || 0) / 100))))
 
   // Movement against the beat before this one, derived the same way, so the figure and its
   // delta can never tell different stories. Null at the first beat, which has nothing behind it.
@@ -457,6 +460,8 @@ export function useSocialListening() {
     state.spaceDraft = ''
     // 3s: the orbit loader's five 500ms ticks plus the reference's 500ms hand-off. The loader
     // keeps its own progress, so there is no step to bump here any more.
+    // Only the account's first industry moves it on to Growing; changing it later keeps the stage.
+    const firstPick = !acct(id).space
     setTimeout(() => {
       // Competitors are cleared with the niche. They are brands within an industry, so a
       // set picked for Restaurants is meaningless under Technology — and leaving them left
@@ -467,7 +472,7 @@ export function useSocialListening() {
       // Simplified (Sujit, 8 Oct): the first industry pick lands on Growing (day 15), not New.
       // Day 0 with an industry only says "too early to tell"; Growing shows it already working.
       // A later change of industry keeps whatever stage the account is on.
-      if (state.design === 'simplified' && state.day === 0) state.day = 15
+      if (state.design === 'simplified' && state.day === 0 && firstPick) state.day = 15
       if (state.design === 'simplified') toast(space + ' selected')
       else toast('Niche set to ' + space, hadComps
         ? 'Trends and ideas now match it. Add competitors for this niche when you are ready.'
@@ -763,6 +768,12 @@ export function useSocialListening() {
     // No state.modal = null: CreateTopicModal closes itself so its leave animation plays, and
     // the alert modal (which saves a search through here) moves on to its list instead of
     // vanishing mid-save.
+    // 27 Oct: the prototype's stand-in for the first fetch. A few seconds after it is made the topic
+    // has its first data, so its row fills in and can take an alert, as it would in the product.
+    if (!silent) setTimeout(() => {
+      const t = (state.topicsByAccount[id] || []).find((x) => x.title === title)
+      if (t) t.collecting = false
+    }, 6000)
     if (!silent && state.design === 'simplified') toast(`You’re now listening to “${title}”. Find it in Your topics.`)
     else if (!silent) toast('Topic created', `“${title}” is now listening on ${listeningOn(nets)}. First data in about an hour.`)
   }

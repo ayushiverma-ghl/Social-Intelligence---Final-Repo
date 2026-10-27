@@ -59,7 +59,10 @@ const show = ref(false)
 // body with Back, the email preview beside it.
 // 19 Oct (Sujit, keep the existing one): a third, the 15 Oct side panel docked under the pop-up's
 // header. It slides in from the right and is 880 wide: the old 440 form, the email preview beside it.
-const inPopup = computed(() => simple.value && !!(state.peekTopic || state.peekSearch))
+// 27 Oct (Ayushi): results are a full page now, so there is no pop-up to dock a flyout to. The
+// alert is always the centred HighRise modal (form with the email preview beside it), as on the
+// oct-5 link.
+const inPopup = computed(() => false)
 const layout = computed(() => (!inPopup.value ? 'modal' : state.alertLayout === 'form' ? 'cover' : state.alertLayout === 'panel' ? 'panel' : 'flyout'))
 const docked = computed(() => layout.value === 'flyout' || layout.value === 'panel')
 const isPanel = computed(() => layout.value === 'panel')
@@ -521,16 +524,17 @@ function toggle(a, v) {
     </div>
 
     <template #footer>
-      <!-- 19 Oct spacing pass: the note gets its own line above the buttons instead of wrapping beside them. -->
-      <div class="flex flex-wrap items-center gap-x-2 gap-y-3 px-4 py-4">
+      <!-- 27 Oct: the centred modal (as on the oct-5 link) has the room to keep the note and the
+           buttons on one row; the note took its own line only in the narrow flyout. -->
+      <div class="flex items-center gap-2 px-4 py-4">
         <template v-if="step === 'form'">
-          <HLText size="md" class="basis-full min-w-0 text-gray-500 truncate">
+          <HLText size="md" class="flex-1 min-w-0 text-gray-500 truncate">
             <template v-if="canSave && saveNote && simple">Also starts listening to “{{ subject }}”</template>
             <template v-else-if="canSave && saveNote">Also saves “{{ subject }}” as a topic · emails <span class="font-medium text-gray-900">{{ people(draft) === 1 ? 'you' : `${people(draft)} people` }}</span></template>
             <template v-else-if="canSave">Emails <span class="font-medium text-gray-900">{{ people(draft) === 1 ? 'you' : `${people(draft)} people` }}</span> when <span class="font-medium text-gray-900">{{ metricsPhrase(draft.metrics) }}</span> moves ±{{ sens.pct }}%</template>
             <template v-else>Pick at least one metric to watch</template>
           </HLText>
-          <HLButton class="ml-auto!" variant="secondary" size="sm" @click="back">Cancel</HLButton>
+          <HLButton class="shrink-0" variant="secondary" size="sm" @click="back">Cancel</HLButton>
           <HLButton variant="primary" color="blue" size="sm" :disabled="!canSave" @click="save">{{ editingId ? 'Save changes' : 'Create alert' }}</HLButton>
         </template>
         <template v-else>

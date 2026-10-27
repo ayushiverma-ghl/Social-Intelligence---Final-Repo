@@ -62,9 +62,12 @@ onBeforeUnmount(() => ro && ro.disconnect())
 
     <!-- 27 Oct (developers): mentions only, for the last 7 days. The backend has no previous week
          and no people or reach figures, so no tabs, no change and no last-week line. -->
-    <div v-if="single" id="mentions-total" class="flex items-baseline gap-2 flex-wrap mt-4">
-      <HLText html-tag="span" v-bind="FIG.card" class="text-gray-900 tabular-nums">{{ cur.value }}</HLText>
-      <HLText html-tag="span" size="md" class="text-gray-500">mentions in the last 7 days</HLText>
+    <div v-if="single" class="mt-4">
+      <div id="mentions-total" class="flex items-baseline gap-2 flex-wrap">
+        <HLText html-tag="span" v-bind="FIG.card" class="text-gray-900 tabular-nums">{{ cur.value }}</HLText>
+        <HLText html-tag="span" size="md" class="text-gray-500">mentions in the last 7 days</HLText>
+      </div>
+      <HLText v-if="cur.value === '0'" id="mentions-zero-note" size="md" class="text-gray-600 mt-1!">We’re listening. Mentions show here as people post about you.</HLText>
     </div>
 
     <!-- across / grid: figures as tabs, edge to edge, hairlines between (gap-px on gray-200) -->
