@@ -1,0 +1,450 @@
+@import "tailwindcss";
+
+@theme {
+  /* Fonts. HLContentWrap puts Tailwind's font-sans on its root, so font-sans has to resolve
+     to HighRise's own stack, or Tailwind's default system stack wins over everything. */
+  --font-sans: var(--hr-font-family-base);
+
+  /* Type — HighRise's own scale. Each size points at HighRise's --hr-font-size-* variable and
+     carries its paired --hr-line-height-*, so `text-hr-md` is exactly HighRise's md step. These
+     are the only text sizes in the app (CLAUDE.md, Typography). HighRise has no 28px step; the
+     single headline figure per card uses display-sm (30px), the nearest step above display-xs. */
+  --text-hr-sm: var(--hr-font-size-sm);                  /* 12 — badges, axis, legend, fine print */
+  --text-hr-sm--line-height: var(--hr-line-height-sm);
+  --text-hr-md: var(--hr-font-size-md);                  /* 13 — body, helper, metadata */
+  --text-hr-md--line-height: var(--hr-line-height-md);
+  --text-hr-lg: var(--hr-font-size-lg);                  /* 14 — labels, buttons, nav, cells */
+  --text-hr-lg--line-height: var(--hr-line-height-lg);
+  --text-hr-2xl: var(--hr-font-size-2xl);                /* 16 — page, card, modal titles */
+  --text-hr-2xl--line-height: var(--hr-line-height-2xl);
+  --text-hr-display-xs: var(--hr-font-size-display-xs);  /* 24 — tile figures, heroes */
+  --text-hr-display-xs--line-height: var(--hr-line-height-display-xs);
+  --text-hr-display-sm: var(--hr-font-size-display-sm);  /* 30 — the one headline figure in a card */
+  --text-hr-display-sm--line-height: var(--hr-line-height-display-sm);
+
+  /* Weights — HighRise's tokens behind Tailwind's names, so font-normal/medium/semibold are
+     HighRise's regular/medium/semibold. */
+  --font-weight-normal: var(--hr-font-weight-regular);
+  --font-weight-medium: var(--hr-font-weight-medium);
+  --font-weight-semibold: var(--hr-font-weight-semibold);
+
+  /* Primary scale — matches HLTailwindConfig from @platform-ui/highrise */
+  --color-primary-25: var(--primary-25);
+  --color-primary-50: var(--primary-50);
+  --color-primary-100: var(--primary-100);
+  --color-primary-200: var(--primary-200);
+  --color-primary-300: var(--primary-300);
+  --color-primary-400: var(--primary-400);
+  --color-primary-500: var(--primary-500);
+  --color-primary-600: var(--primary-600);
+  --color-primary-700: var(--primary-700);
+  --color-primary-800: var(--primary-800);
+  --color-primary-900: var(--primary-900);
+
+  /* Gray scale (Untitled UI / HighRise tokens) */
+  --color-gray-900: var(--gray-900);
+  --color-gray-800: var(--gray-800);
+  --color-gray-700: var(--gray-700);
+  --color-gray-600: var(--gray-600);
+  --color-gray-500: var(--gray-500);
+  --color-gray-400: var(--gray-400);
+  --color-gray-300: var(--gray-300);
+  --color-gray-200: var(--gray-200);
+  --color-gray-100: var(--gray-100);
+  --color-gray-50: var(--gray-50);
+  --color-gray-25: var(--gray-25);
+
+  /* Semantic. Every value below is a step off HighRise's own success / error / warning
+     scales, taken from @platform-ui/highrise rather than from Tailwind. The three that used
+     to sit here were Tailwind's stock green-600, red-600 and amber-600, which HighRise does
+     not define anywhere.
+
+     Two steps each, because these tokens do two jobs. The 500s are the marks: sentiment
+     dots, bars, status fills. The 700s are the text: deltas, labels, anything read rather
+     than looked at. Only the 700s clear 4.5:1 on white, and the old single value failed it
+     for positive (3.3) and warning (3.19). */
+  /* 21 Oct (pick 14 V1, Sujit): charts are HighRise's brand blue, no custom scale. Today and
+     "you" in primary-700 (one step lighter than the old navy), every other bar primary-200.
+     "Other" and "rest" stay grey. */
+  --color-dataviz-100: var(--primary-100);
+  --color-dataviz-200: var(--primary-200);
+  --color-dataviz-300: var(--primary-300);
+  --color-dataviz-400: var(--primary-400);
+  --color-dataviz-500: var(--primary-500);
+  --color-dataviz-600: var(--primary-600);
+  --color-dataviz-700: var(--primary-700);
+  --color-dataviz-800: var(--primary-800);
+  --color-chart-strong: var(--primary-700);
+  --color-chart: var(--primary-500);
+  --color-chart-soft: var(--primary-200);
+  --color-chart-faint: var(--gray-200);
+  --color-positive: var(--success-500);          /* HighRise success-500 */
+  --color-positive-strong: var(--success-700);   /* HighRise success-700 · 5.41:1 */
+  --color-negative: var(--error-500);          /* HighRise error-500 */
+  --color-negative-strong: var(--error-700);   /* HighRise error-700 · 6.57:1 */
+  --color-warning: var(--warning-500);          /* HighRise warning-500 */
+  --color-warning-strong: var(--warning-700);    /* HighRise warning-700 · 5.43:1 */
+
+
+  /* Accent */
+  --color-accent-green: var(--green-300);      /* HighRise green-300 */
+  --color-accent-green-dark: var(--green-400); /* HighRise green-400 */
+  --color-accent-purple: var(--purple-600);  /* HighRise purple-600 */
+  --color-accent-pink: var(--fuchsia-500);    /* HighRise fuchsia-500 */
+  --color-accent-purple-light: var(--purple-50); /* HighRise violet-25 */
+  --color-accent-purple-border: var(--violet-200); /* HighRise violet-200 */
+  /* indigo-700, lifted straight off HighRise's own scale rather than invented here.
+     It marks "you" on the competitor leaderboard: 4.99:1 against the primary-200 peer bars
+     and clear on every colourblind check, where the five accents above all failed. purple is
+     Ask AI's, pink is fuchsia-500 and too light for a bar, green reads as success.
+     Named rather than dropped in as a hex so the next chart that needs an accent finds it.
+     No tint pair: the row is marked by the bar and the rank, not by a band behind it. */
+  --color-accent-indigo: var(--indigo-700);
+
+  /* Semantic light backgrounds, also HighRise steps rather than invented tints. */
+  --color-warning-light: var(--warning-50);     /* HighRise warning-50 */
+  --color-negative-light: var(--error-50);    /* HighRise error-50 */
+  --color-positive-light: var(--success-50);    /* HighRise success-50 */
+}
+
+/* AI Insights surface. Three overlapping radials at different sizes, so the card glows
+   unevenly instead of reading as one flat tint, and nothing in it lines up with the four
+   columns underneath. A multi-stop gradient can't be written in Tailwind classes without
+   hardcoding the palette, so it lives here against the theme variables instead. */
+/* Purple, not blue: this glow marks the one block where AI is speaking rather than where
+   data is being reported. Same two hues as the Ask AI button in the top bar, so the AI
+   surface and its entry point finally match. */
+.ai-insights-surface,
+.hr-v-4-8-5 .hr-card.sl-hrcard.ai-insights-surface {
+  background:
+    radial-gradient(460px 240px at 10% -5%,
+      color-mix(in srgb, var(--color-accent-purple) 12%, transparent), transparent 70%),
+    radial-gradient(380px 260px at 94% 16%,
+      color-mix(in srgb, var(--color-accent-pink) 9%, transparent), transparent 72%),
+    radial-gradient(560px 320px at 58% 125%,
+      color-mix(in srgb, var(--color-accent-purple) 6%, transparent), transparent 70%),
+    var(--color-white);
+}
+
+/* The three stat icons, in a violet tint box. They were primary blue — the only blue left
+   inside a block labelled AI Insights, which made the one section where AI is speaking look
+   like the data cards around it. Kept as a class rather than Tailwind arbitrary values so
+   the tint stays tied to the theme variable. */
+.ai-insights-icon {
+  background: color-mix(in srgb, var(--color-accent-purple) 11%, var(--color-white));
+  color: var(--color-accent-purple);
+}
+
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+
+* { box-sizing: border-box; }
+
+/* Prototype build (21 Oct): Inter comes from Google Fonts, which names the family "Inter", not
+   HighRise's "Inter var". Put "Inter" first in HighRise's base stack (html:root outranks its
+   :root) and in the Naive UI stack its components set inline (a stylesheet !important beats an
+   inline declaration). */
+html:root { --hr-font-family-base: "Inter", "Inter var", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
+[style*="--n-font-family"] { --n-font-family: "Inter", "Inter var", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important; }
+
+body {
+  margin: 0;
+  font-family: var(--hr-font-family-base);
+  background: var(--color-gray-50);
+  color: var(--color-gray-900);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---- HighRise overrides ------------------------------------------------------------
+   The app is wrapped in HLContentWrap (App.vue), so every HL component renders with HighRise's
+   `hr-` classes under the version namespace. HighRise's own rules carry that namespace plus a
+   data-v scope, which outranks a two-class selector, so the few overrides below either raise
+   specificity with `.hr-v-4-8-5` or say why they need `!important`. Layout only: colour, type,
+   radius and shadow come from HighRise. Shadows are HighRise's variables: shadow-(--shadow-lg). */
+
+/* Range picker. 136px fits the longest option ("Last 30 days"), and the menu matches the trigger
+   so it doesn't overhang. It was 190, which clipped Save as topic off the detail toolbar at
+   laptop widths. Teleported menu, so the menu rule is global. */
+.hr-v-4-8-5 .sl-range-select.hr-select { width: 136px; }
+.range-select-menu { min-width: 136px; }
+
+/* HLBadge resolves `color` to that family's 50 step with white text, so a count comes out
+   white on near-white. The count is the badge's whole job, so the fill is the primary step. */
+.hr-v-4-8-5 .sl-alert-badge .hr-badge-sup {
+  background: var(--color-primary-600);
+  box-shadow: 0 0 0 1.5px var(--color-white);
+}
+/* The digit sits in its own element that takes the badge's font colour (gray-700), so on the
+   blue fill the count was dark on dark and could not be read (Sujith, 6 Oct). */
+html.sl-motion .hr-v-4-8-5 .sl-alert-badge .hr-badge-sup,
+html.sl-motion .hr-v-4-8-5 .sl-alert-badge .hr-badge-sup * { color: var(--color-white); }
+
+/* ---- Shared helpers for HighRise components (use these, don't re-invent per file) ---- */
+
+/* A dashed HLButton, for "add another" tiles that stand for an empty slot. HLButton paints
+   its border on a separate element with an inline style, hence !important. */
+.sl-dashed .hr-button__border,
+.sl-dashed .hr-button__state-border { border-style: dashed !important; }
+
+/* Destructive HLDropdown option: pass `class: 'sl-danger-option'` on the option. */
+.sl-danger-option.hr-dropdown-option,
+.sl-danger-option .hr-dropdown-option-icon { color: var(--color-negative-strong) !important; }
+
+/* HLRadioCard rows share their row instead of wrapping at the card's 300px default. Put the
+   class on a wrapper around HLRadioGroup (it doesn't forward class). */
+/* HighRise lays the row out with gap: var(--n-radio-group-horizontal-gap) but never defines
+   it, so the cards butted up at 0. 8px is its checkbox-group horizontal gap at this size. */
+.sl-cards .hr-radio-group--equal-width { flex-wrap: nowrap; --n-radio-group-horizontal-gap: 8px; }
+.sl-cards .hr-radio-card { flex: 1 1 0; min-width: 0; }
+
+/* HLDropdown's trigger wrappers size to their content; wrap a dropdown that should behave
+   as a full-width field in `.sl-full`. */
+.hr-v-4-8-5 .sl-full.sl-full .hr-dropdown__container,
+.hr-v-4-8-5 .sl-full.sl-full .hr-dropdown__trigger-wrapper,
+.hr-v-4-8-5 .sl-full.sl-full .hr-input-wrapper,
+.hr-v-4-8-5 .sl-full.sl-full .hr-input { width: 100%; }
+
+/* Alerts modal: the form and its email preview run edge to edge, split by one rule, so the
+   form step drops the modal content's own 16px inset. */
+#alert-modal .hr-modal__content:has(> div > .sl-alert-panes) { padding: 0; }
+/* HLForm's 8px item gap assumes each item carries its feedback row. These items turn it off,
+   so a hint line sat 8px from the next label, the same as from its own control. 24px between
+   fields (19 Oct spacing pass), 10px or less inside one, so each field reads as a group. */
+#alert-modal .sl-alert-panes .hr-form { gap: 24px; }
+/* out15 W08: the 440 flyout is 600 tall at most, so its fields sit 16 apart (still twice the
+   label-to-control gap) and the "How often" helper clears the fixed footer at 1440×900. The body
+   keeps 16 of scroll padding so a focused field never tucks under the footer. */
+#alert-modal.sl-flyout .sl-alert-panes .hr-form { gap: 16px; }
+#alert-modal.sl-flyout .hr-dialog__content--text { scroll-padding-bottom: 16px; }
+/* Round 7: the .hr-dialog__title padding override (20 42 4 20) is gone; HighRise's own 16 16 0 16 stands. */
+/* The sensitivity cards: same height, text from the top. Balanced runs to three lines, and the
+   other two used to sit centred beside it. */
+#alert-modal .sl-cards .hr-radio-group--equal-width { align-items: stretch; }
+#alert-modal .sl-cards .hr-radio-card { height: auto; }
+#alert-modal .sl-cards .hr-radio-card .hr-card-content { height: 100%; align-items: flex-start; justify-content: flex-start; }
+
+/* HLEmpty titles step 13/14/15px by size, none of them the 16px card title, and the size is an
+   inline custom property, so only !important on that property moves it. Put `sl-empty` on
+   (or around) any HLEmpty that stands in for a card. */
+/* d04 (21 Oct): the small HLEmpty prints its description at 12 (hr-text-sm), off the 13/14/16 scale.
+   Raised to HighRise's md text (13/18). Only the description of a small HLEmpty (the one sized sm). */
+.hr-v-4-8-5 .hr-empty .hr-empty__description.hr-text-sm {
+  --n-font-size: var(--hr-font-size-md) !important;
+  --n-line-height: var(--hr-line-height-md) !important;
+  font-size: var(--hr-font-size-md) !important;
+  line-height: var(--hr-line-height-md) !important;
+}
+.hr-v-4-8-5 .sl-empty .hr-empty__title {
+  --n-font-size: var(--hr-font-size-2xl) !important;
+  --n-line-height: var(--hr-line-height-2xl) !important;
+}
+
+/* An HLDataTable inside one of our rounded-xl cards: the card owns the border, so HighRise's
+   own 4px table border comes off rather than doubling up. Put `sl-table` on the wrapper.
+   Doubled class to beat `.hr-v-4-8-5 .hr-data-table[data-v]`. */
+.hr-v-4-8-5 .sl-table .hr-data-table.hr-data-table { border: 0; border-radius: 0; }
+
+
+/* ---- Sujeet's simplified design (5 Oct), copied from his prototype's stylesheet ----
+   Motion is on only while the simplified design is (html.sl-motion). */
+@media(prefers-reduced-motion:no-preference){@keyframes sl-rise{0%{opacity:0;transform:translateY(8px)}
+to{opacity:1;transform:none}
+}
+@keyframes sl-grow-x{0%{transform:scaleX(0)}
+to{transform:scaleX(1)}
+}
+@keyframes sl-grow-y{0%{transform:scaleY(0)}
+to{transform:scaleY(1)}
+}
+@keyframes sl-pop{0%{opacity:0;transform:scale(.6)}
+60%{opacity:1;transform:scale(1.08)}
+to{transform:scale(1)}
+}
+@keyframes sl-shimmer{0%{background-position:-200% 0}
+to{background-position:200% 0}
+}
+.sl-motion .sl-enter{animation:.46s cubic-bezier(.16,1,.3,1) both sl-rise;animation-delay:calc(min(var(--i,0),6)*60ms)}
+.sl-motion .sl-grow-x{transform-origin:0;animation:.7s cubic-bezier(.16,1,.3,1) both sl-grow-x;animation-delay:calc(min(var(--i,0),6)*70ms + .12s)}
+.sl-motion .sl-grow-y{transform-origin:bottom;animation:.7s cubic-bezier(.16,1,.3,1) both sl-grow-y;animation-delay:calc(min(var(--i,0),8)*60ms + .12s)}
+.sl-motion .sl-pop{animation:.42s cubic-bezier(.34,1.56,.64,1) both sl-pop}
+.sl-motion .hr-progress .hr-progress-graph-line-fill{transform-origin:0;animation:.8s cubic-bezier(.16,1,.3,1) .15s both sl-grow-x}
+.sl-motion .sl-lift{transition:transform .2s cubic-bezier(.16,1,.3,1),box-shadow .2s,border-color .2s}
+.sl-motion .sl-lift:hover{box-shadow:var(--shadow-md);border-color:var(--color-gray-300);transform:translateY(-2px)}
+.sl-motion .sl-lift:active{box-shadow:var(--shadow-xs);transform:translateY(0)scale(.98)}
+.sl-motion .sl-card{transition:border-color .2s,box-shadow .2s}
+.sl-motion .sl-card:hover{border-color:var(--color-gray-300);box-shadow:var(--shadow-xs)}
+.sl-motion .hr-button:active:not(:disabled){transform:scale(.98)}
+.sl-motion .hr-button{transition:transform .12s}
+.sl-motion .sl-refreshing{position:relative}
+.sl-motion .sl-refreshing:after{content:"";pointer-events:none;border-radius:inherit;background:linear-gradient(100deg,transparent 30%,var(--color-primary-100) 50%,transparent 70%);position:absolute;inset:0}
+@supports (color:color-mix(in lab,red,red)){.sl-motion .sl-refreshing:after{background:linear-gradient(100deg,transparent 30%,color-mix(in srgb,var(--color-primary-100) 70%,transparent) 50%,transparent 70%)}
+}
+.sl-motion .sl-refreshing:after{background-size:200% 100%;animation:.9s ease-in-out sl-shimmer}
+.sl-view-enter-active{transition:opacity .28s,transform .38s cubic-bezier(.16,1,.3,1)}
+.sl-view-leave-active{transition:opacity .14s,transform .14s}
+.sl-view-enter-from{opacity:0;transform:translateY(10px)}
+.sl-view-leave-to{opacity:0;transform:translateY(-4px)}
+.sl-panel-enter-active{transform-origin:100% 100%;transition:opacity .2s,transform .26s cubic-bezier(.16,1,.3,1)}
+.sl-panel-leave-active{transform-origin:100% 100%;transition:opacity .14s,transform .14s}
+.sl-panel-enter-from,.sl-panel-leave-to{opacity:0;transform:scale(.96)translateY(6px)}
+}
+.sl-hover-actions{opacity:0;transition:opacity .16s}
+.group\/sec:hover .sl-hover-actions,.group\/sec:focus-within .sl-hover-actions{opacity:1}
+@media(hover:none){.sl-hover-actions{opacity:1}
+}
+@media(prefers-reduced-motion:no-preference){.sl-motion .sl-zoom img{transition:transform .6s cubic-bezier(.16,1,.3,1)}
+.sl-motion .sl-zoom:hover img{transform:scale(1.04)}
+.sl-motion .sl-starter-preview{transition:opacity .4s,filter .4s}
+.sl-motion .sl-stack-layer{transition:transform .4s cubic-bezier(.16,1,.3,1)}
+.sl-motion .sl-zoom:hover .sl-stack-mid{transform:translate(2px)}
+.sl-motion .sl-zoom:hover .sl-stack-back{transform:translate(4px)}
+}
+.sl-motion .sl-row-hover{cursor:default;border-radius:8px;margin-inline:-8px;padding-inline:8px;transition:background-color .15s}
+.sl-motion .sl-row-hover:hover{background:var(--color-gray-50)}
+/* 21 Oct audit: a hover row that opens something shows the pointer. */
+.sl-motion .sl-row-hover[role=button]{cursor:pointer}
+.sl-motion .sl-hit-col{cursor:crosshair;transition:background-color .15s;display:block}
+.sl-motion .sl-hit-col:hover{background:var(--color-primary-600)}
+@supports (color:color-mix(in lab,red,red)){.sl-motion .sl-hit-col:hover{background:color-mix(in srgb,var(--color-primary-600) 8%,transparent)}
+}
+.sl-motion .sl-hit-dot{cursor:crosshair;transition:background-color .15s,box-shadow .15s;display:block}
+.sl-motion .sl-hit-dot:hover{background:var(--color-primary-600)}
+@supports (color:color-mix(in lab,red,red)){.sl-motion .sl-hit-dot:hover{background:color-mix(in srgb,var(--color-primary-600) 18%,transparent)}
+}
+.sl-motion .sl-hit-dot:hover{box-shadow:0 0 0 2px var(--color-white)}
+.sl-motion .sl-seg{cursor:crosshair;transition:filter .15s}
+.sl-motion .sl-seg:hover{filter:brightness(.92)}
+.sl-motion .sl-heat-cell{cursor:crosshair;transition:transform .12s,box-shadow .12s;display:block}
+.sl-motion .sl-heat-cell:hover{box-shadow:0 0 0 2px var(--color-white),0 0 0 3px var(--color-primary-600);z-index:1;position:relative;transform:scale(1.12)}
+.sl-post-actions{background:linear-gradient(to top,var(--color-gray-900),transparent)}
+@supports (color:color-mix(in lab,red,red)){.sl-post-actions{background:linear-gradient(to top,color-mix(in srgb,var(--color-gray-900) 55%,transparent),transparent)}
+}
+.sl-post-actions{opacity:0;padding-top:32px;transition:opacity .18s,transform .22s cubic-bezier(.16,1,.3,1);transform:translateY(6px)}
+.group\/post:hover .sl-post-actions,.group\/post:focus-within .sl-post-actions{opacity:1;transform:none}
+@media(hover:none){.sl-post-actions{opacity:1;transform:none}
+}
+.sl-starter-faded{opacity:.85;filter:blur(2.5px);pointer-events:none;-webkit-user-select:none;user-select:none;-webkit-mask-image:linear-gradient(#000 15%,#0000 100%);mask-image:linear-gradient(#000 15%,#0000)}
+
+/* 7 Oct review, 3C: a topic created a moment ago slides in tinted blue and settles to white,
+   and a collecting topic shows a small moving bar where its numbers will go. */
+@keyframes sl-row-arrive{0%,55%{background-color:var(--color-primary-50)}100%{background-color:transparent}}
+@keyframes sl-cell-in{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+.hr-v-4-8-5 .hr-data-table tr.hr-data-table__body-row:has(.sl-row-new){animation:sl-row-arrive 2.8s ease-out both}
+.hr-v-4-8-5 .hr-data-table tr.hr-data-table__body-row:has(.sl-row-new)>td{animation:sl-cell-in .4s ease-out both}
+.sl-eq{display:inline-flex;align-items:flex-end;gap:2px;height:14px;flex:none}
+.sl-eq i{width:3px;height:4px;border-radius:2px;background:var(--color-primary-600);animation:sl-eq 1s ease-in-out infinite}
+.sl-eq i:nth-child(2){animation-delay:-.3s}
+.sl-eq i:nth-child(3){animation-delay:-.6s}
+@keyframes sl-eq{0%,100%{height:4px}50%{height:14px}}
+@media (prefers-reduced-motion:reduce){
+  .hr-v-4-8-5 .hr-data-table tr.hr-data-table__body-row:has(.sl-row-new),
+  .hr-v-4-8-5 .hr-data-table tr.hr-data-table__body-row:has(.sl-row-new)>td,.sl-eq i{animation:none}
+  .sl-eq i{height:8px}
+}
+.hr-v-4-8-5 .sl-starter-add.hr-button{height:auto;min-height:116px;width:100%;white-space:normal}
+.hr-v-4-8-5 .sl-demo-segment .hr-radio-group{display:flex;width:100%}
+.hr-v-4-8-5 .sl-demo-segment .hr-radio-group>*{flex:1 1 0;min-width:0;justify-content:center}
+.hr-v-4-8-5 .sl-niche-list .hr-radio-group{display:block;width:100%}
+.hr-v-4-8-5 .hr-button.sl-net-tile{justify-content:flex-start}
+.sl-cards .hr-radio-group--equal-width{--n-radio-group-horizontal-gap:8px;flex-wrap:nowrap}
+
+/* 14 Oct (AC): the AI summary plate. A corner wash and a faint dot field, as on the landing.
+   No border: the wash is the edge. Purple pass (A, violet corner): the same two washes and
+   the dots in HighRise violet and purple, so the AI section carries its hint of purple. */
+.sl-ai-plate{position:relative;isolation:isolate;overflow:hidden;background:
+  radial-gradient(75% 95% at 0% 10%,color-mix(in srgb,var(--violet-200) 70%,transparent),transparent 72%),
+  radial-gradient(60% 60% at 100% 100%,var(--purple-50),transparent 70%),var(--color-white)}
+.sl-ai-plate::after{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+  background-image:radial-gradient(color-mix(in srgb,var(--violet-300) 40%,transparent) 1px,transparent 1.3px);background-size:20px 20px;
+  -webkit-mask-image:radial-gradient(ellipse 70% 70% at 50% 50%,transparent 35%,#000 100%);mask-image:radial-gradient(ellipse 70% 70% at 50% 50%,transparent 35%,#000 100%)}
+.sl-figure-text{line-height:32px}
+/* 15 Oct (A): the day bars. Slim and solid: today in primary-600, the days before in primary-100. */
+.sl-day-bar{display:block;width:100%;max-width:40px;border-radius:4px 4px 2px 2px}
+/* 15 Oct (audit 10): Create alert docked inside the insights pop-up, under its header. */
+#alert-modal.sl-docked{position:fixed!important;top:var(--sl-dock-top);right:var(--sl-dock-right);height:var(--sl-dock-h);width:440px!important;max-width:440px!important;margin:0!important;
+  border-radius:0 0 8px 0!important;display:flex!important;flex-direction:column;box-shadow:-12px 0 24px -8px rgb(16 24 40/.14)!important;border-left:1px solid var(--color-gray-200)}
+#alert-modal.sl-docked .hr-dialog__content{flex:1;min-height:0;display:flex;flex-direction:column;overflow:hidden!important}
+#alert-modal.sl-docked .hr-dialog__content--text{flex:1;min-height:0;overflow-y:auto!important}
+#alert-modal.sl-docked .hr-dialog__content>:last-child{flex-shrink:0;border-top:1px solid var(--color-gray-200)}
+.hr-modal-container:has(#alert-modal.sl-docked) .hr-modal-mask{background:rgb(16 24 40/.12)!important}
+
+
+/* 21 Oct: AI summary readings. Columns are equal (round 7: gap 48); the rule between two readings
+   sits in the middle of the gap, 24px from the text on each side (the card padding). */
+@media (min-width:640px){
+  #ai-summary .sl-readings>*+*{position:relative}
+  #ai-summary .sl-readings>*+*::before{content:"";position:absolute;top:0;bottom:0;left:-16px;width:1px;background:var(--color-gray-200)}
+}
+
+/* 19 Oct audit: text typed into a field is 14px everywhere, as in Create alert. HLInput's md
+   size types at 16px. */
+.hr-v-4-8-5 .hr-input.hr-input--md{--n-font-size:var(--hr-font-size-lg)!important}
+
+/* 19 Oct audit: the current option in a single-choice HLDropdown gets a check mark. */
+/* 21 Oct audit: a multi-select marks its picks with the checkbox only; the row takes the same
+   gray-50 as sl-opt-on instead of HighRise's primary-50 selection tint (no decorative blue). */
+.hr-v-4-8-5 .hr-dropdown-option.hr-dropdown-option--selected:has(.hr-dropdown-option-checkbox){background:var(--color-gray-50)!important}
+.hr-v-4-8-5 .hr-dropdown-option.sl-opt-on{position:relative;padding-right:36px;background:var(--color-gray-50)}
+.hr-v-4-8-5 .hr-dropdown-option.sl-opt-on::after{content:"";position:absolute;right:12px;top:50%;width:16px;height:16px;margin-top:-8px;
+  background:var(--color-primary-600);-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E") center/16px no-repeat;
+  mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E") center/16px no-repeat}
+
+/* 15 Oct (review 11): the docked alert panel uses the page's type sizes, has one way out (Cancel),
+   and lets its footer note wrap. */
+#alert-modal.sl-docked .hr-dialog__close{display:none!important}
+#alert-modal:is(.sl-docked,.sl-flyout,.sl-cover) input,#alert-modal:is(.sl-docked,.sl-flyout,.sl-cover) .hr-base-selection-label,#alert-modal:is(.sl-docked,.sl-flyout,.sl-cover) .hr-base-selection-input,
+#alert-modal:is(.sl-docked,.sl-flyout,.sl-cover) .hr-base-selection-placeholder,#alert-modal:is(.sl-docked,.sl-flyout,.sl-cover) [class*="selection"] *{font-size:var(--hr-font-size-lg)!important;line-height:var(--hr-line-height-lg)!important}
+#alert-modal.sl-docked .hr-dialog__content>:last-child .truncate{white-space:normal!important}
+
+/* 19 Oct (Sujit): Create alert as a flyout from its button inside the insights pop-up. */
+#alert-modal.sl-flyout{position:fixed!important;top:var(--sl-fly-top);right:var(--sl-fly-right);height:var(--sl-fly-h);width:440px!important;max-width:440px!important;margin:0!important;
+  border-radius:12px!important;display:flex!important;flex-direction:column;border:1px solid var(--color-gray-200);box-shadow:0 20px 24px -4px rgb(16 24 40/.10),0 8px 8px -4px rgb(16 24 40/.04)!important}
+.hr-modal-container:has(#alert-modal.sl-flyout) .hr-modal-mask{background:transparent!important}
+#alert-modal.sl-flyout .hr-dialog__close{display:none!important}
+/* The other two, shown for comparison: the form covering the pop-up's body, or docked on its right. */
+#alert-modal.sl-cover{position:fixed!important;top:var(--sl-cov-top);left:var(--sl-cov-left);width:var(--sl-cov-w)!important;max-width:none!important;height:var(--sl-cov-h);margin:0!important;
+  border-radius:0 0 8px 8px!important;display:flex!important;flex-direction:column;box-shadow:none!important}
+.hr-modal-container:has(#alert-modal.sl-cover) .hr-modal-mask{background:transparent!important}
+#alert-modal.sl-cover .hr-dialog__close{display:none!important}
+#alert-modal:is(.sl-flyout,.sl-cover) .hr-dialog__content{flex:1;min-height:0;display:flex;flex-direction:column;overflow:hidden!important}
+#alert-modal:is(.sl-flyout,.sl-cover) .hr-dialog__content--text{flex:1;min-height:0;overflow-y:auto!important}
+#alert-modal:is(.sl-flyout,.sl-cover) .hr-dialog__content>:last-child{flex-shrink:0}
+/* 21 Oct (pick 11 V2): the flyout's only rule is HighRise's own footer-divider, 1px gray-200. This
+   extra border sat under it there (a 2px, darker footer line), so it stays on the cover only. */
+#alert-modal.sl-cover .hr-dialog__content>:last-child{border-top:1px solid var(--color-gray-200)}
+#alert-modal:is(.sl-flyout,.sl-cover) .hr-dialog__content>:last-child .truncate{white-space:normal!important}
+#alert-modal.sl-cover .sl-alert-panes{min-height:100%}
+/* 21 Oct (pick 11 V2): no hand-added underline under the tabs (HLTabs no-border, as HighRise draws it). */
+#alert-modal.sl-flyout .sl-alert-tabs{position:sticky;top:0;z-index:1;background:var(--base-white);padding:0 16px}
+/* 19 Oct: the side panel (the 15 Oct docked panel, form and preview) slides in from the pop-up's right
+   edge in 600ms and back out in 380ms. The clip keeps it from showing past that edge while it moves. */
+#alert-modal.sl-panel{width:880px!important;max-width:880px!important}
+#alert-modal.sl-panel .sl-alert-panes{min-height:100%}
+#alert-modal.sl-panel.fade-in-scale-up-transition-enter-active{transition:transform .6s cubic-bezier(.22,.8,.24,1),clip-path .6s cubic-bezier(.22,.8,.24,1)!important}
+#alert-modal.sl-panel.fade-in-scale-up-transition-leave-active{transition:transform .38s cubic-bezier(.4,0,1,1),clip-path .38s cubic-bezier(.4,0,1,1)!important}
+#alert-modal.sl-panel.fade-in-scale-up-transition-enter-from,#alert-modal.sl-panel.fade-in-scale-up-transition-leave-to{transform:translateX(100%)!important;clip-path:inset(0 100% 0 0);opacity:1!important}
+#alert-modal.sl-panel.fade-in-scale-up-transition-enter-to,#alert-modal.sl-panel.fade-in-scale-up-transition-leave-from{transform:translateX(0)!important;clip-path:inset(0 0 0 0);opacity:1!important}
+/* 19 Oct: the card dropdowns keep HighRise's focus ring for the keyboard only. After a mouse pick
+   focus comes back to the button, and the ring stayed on it like a glow. */
+:is(#niche-picker,#trends-see-all,#post-focus-menu,#post-goal):focus:not(:focus-visible){outline:none!important;box-shadow:0 1px 2px rgb(16 24 40/.05)!important}
+/* 19 Oct: 13px is the floor (Sujit). HighRise draws radio-card descriptions at 12. */
+.sl-cards .hr-radio-card .hr-text-sm{font-size:var(--hr-font-size-md)!important;line-height:var(--hr-line-height-md)!important}
+
+/* 19 Oct consistency: every control shows the same focus ring when reached by keyboard. */
+.hr-button--text:focus-visible,.hr-switch:focus-visible,[role="switch"]:focus-visible,.hr-switch:focus-within{outline:2px solid var(--color-primary-600)!important;outline-offset:2px!important;border-radius:6px}
+/* 19 Oct: toasts sit top right, just under the app's top bar, clear of its buttons. */
+.hr-notification-container{top:104px!important;bottom:auto!important;left:auto!important;right:24px!important;transform:none!important;margin-top:0!important;align-items:flex-end!important}
+
+/* Round 7 (Ayushi: "everything should be coming from HighRise"): every Overview card shell is HLCard.
+   HLCard draws radius 8, a gray-200 border and shadow-md around an .hr-card-content wrapper; the
+   cards keep Sujit's hairline (no resting shadow, gray-300 + shadow-xs on hover via .sl-card) and
+   stretch to the row so the Next step footers line up. Padding is 24 on all sides, set inside. */
+.sl-hrcard.hr-card{display:flex;flex-direction:column;min-width:0}
+.hr-v-4-8-5 .hr-card.sl-hrcard.sl-hrcard{box-shadow:none}
+.sl-motion .hr-v-4-8-5 .hr-card.sl-hrcard.sl-card{transition:border-color .2s,box-shadow .2s}
+.sl-motion .hr-v-4-8-5 .hr-card.sl-hrcard.sl-card:hover{border-color:var(--color-gray-300);box-shadow:var(--shadow-xs)}
+.sl-hrcard.hr-card>.hr-card-content{flex:1;min-height:0;display:flex;flex-direction:column}
+/* out14 (21 Oct audit): HighRise prints these at 10/12; the page scale is 13/14/16/24. */
+#topic-noise label, #topic-noise label * { font-size: 13px !important; }
+button.sl-suggest-btn p.hr-text.hr-text-2xs { font-size: 13px !important; }
+#niche-modal .hr-input-word-count { font-size: 13px !important; }
